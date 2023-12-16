@@ -1,5 +1,9 @@
 // import express
 const express = require("express")
+// import morgan
+const morgan = require("morgan")
+// import method override
+const methodOverride = require("method-override")
 
 // import our fruits
 // require will return the value of module.exports
@@ -15,6 +19,12 @@ app.use(express.static("public")) // use a "public" folder for files
 //express.urlencoded (parse url encoded bodies)
 // add the data to req.body
 app.use(express.urlencoded({extended: true}))
+// morgan - will log data about each request for debugging
+app.use(morgan("dev"))
+// methodOverride - allows to override form post request
+// as a different method like PUT or DELETE
+// It will look for a _method url query
+app.use(methodOverride("_method"))
 
 
 // fruits index route
@@ -60,6 +70,18 @@ app.post("/fruits", (req, res) => {
 })
 
 
+// Destroy Route - Deletes a fruit
+// Delete -> /fruits/:id
+// Deletes a specified fruit, redirects to the index
+app.delete("/fruits/:id", (req, res) => {
+    // Get the id from params
+    const id = req.params.id
+    // Then we'll splice it from the array
+    // arr.splice(index, numOfItemsToCut)
+    fruits.splice(id, 1)
+    // Redirect back to index
+    res.redirect("/fruits")
+})
 
 
 // fruits show route
